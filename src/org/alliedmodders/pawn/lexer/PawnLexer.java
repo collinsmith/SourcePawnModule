@@ -642,13 +642,8 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                             break;
                         case 'o':
                             if ((ch = nextChar()) == 'i'
-                             && (ch = nextChar()) == 'd') {
-                                System.out.println("T3ST: testing VOID");
-                                Token<PawnTokenId> token = keywordIdentifierOrTag(PawnTokenId.VOID);
-                                System.out.println("T3ST: VOID = " + token.id() + "; " + token.id().primaryCategory());
-                                return token;
-                                //return keywordIdentifierOrTag(PawnTokenId.VOID);
-                            }
+                             && (ch = nextChar()) == 'd') 
+                                return keywordIdentifierOrTag(PawnTokenId.VOID);
                             break;
                     }
                     return finishIdentifierOrTag(ch);
