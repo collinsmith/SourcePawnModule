@@ -30,6 +30,7 @@ public enum PawnTokenId implements TokenId {
     CONTINUE("continue", "keyword-directive"),
     DECL("default", "keyword"),
     DEFAULT("default", "keyword-directive"),
+    DELETE("delete", "keyword-directive"),
     DO("do", "keyword-directive"),
     ELSE("else", "keyword-directive"),
     ENUM("enum", "keyword"),
