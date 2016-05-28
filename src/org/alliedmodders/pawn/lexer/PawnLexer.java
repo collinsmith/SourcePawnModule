@@ -636,8 +636,13 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                             break;
                         case 'o':
                             if ((ch = nextChar()) == 'i'
-                             && (ch = nextChar()) == 'd')
-                                return keywordIdentifierOrTag(PawnTokenId.VOID);
+                             && (ch = nextChar()) == 'd') {
+                                System.out.println("T3ST: testing VOID");
+                                Token<PawnTokenId> token = keywordIdentifierOrTag(PawnTokenId.VOID);
+                                System.out.println("T3ST: VOID = " + token.id() + "; " + token.id().primaryCategory());
+                                return token;
+                                //return keywordIdentifierOrTag(PawnTokenId.VOID);
+                            }
                             break;
                     }
                     return finishIdentifierOrTag(ch);
@@ -725,7 +730,7 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
         return finishIdentifierOrTag(nextChar());
     }
     
-    private Token<PawnTokenId> finishIdentifierOrTag(int ch) {
+    private Token<PawnTokenId> finishIdentifierOrTag(int ch) {        
         while (true) {
             if (ch == EOF || !Pawn.isPawnIdentifierPart(ch)) {
                 if (ch == ':') {
@@ -745,7 +750,7 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
 
     private Token<PawnTokenId> keywordIdentifierOrTag(PawnTokenId keywordId, int ch) {
         // Check whether the given char is non-ident and if so then return keyword
-        if (ch == EOF || !Character.isJavaIdentifierPart(ch)) {
+        if (ch == EOF || !Pawn.isPawnIdentifierPart(ch)) {
             if (ch == ':') {
                 if (keywordId == PawnTokenId.UNDERSCORE) {
                     return token(PawnTokenId._TAG);
@@ -754,6 +759,8 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                 return token(keywordId);
             } else if (!PawnTokenId.language().tokenCategories(keywordId).contains("tag")) {
                 backup(1);
+                return token(keywordId);
+            } else if (PawnTokenId.language().tokenCategories(keywordId).contains("tag-builtin")) {
                 return token(keywordId);
             } else
                 return finishIdentifierOrTag();

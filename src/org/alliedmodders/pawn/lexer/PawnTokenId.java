@@ -57,11 +57,11 @@ public enum PawnTokenId implements TokenId {
     VIEW_AS("view_as", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
-    BOOL("bool", "tag"),
-    CHAR("char", "tag"),
-    FLOAT("float", "tag"),
-    INT("int", "tag"),
-    VOID("void", "tag"),
+    BOOL("bool", "tag-builtin"),
+    CHAR("char", "tag-builtin"),
+    FLOAT("float", "tag-builtin"),
+    INT("int", "tag-builtin"),
+    VOID("void", "tag-builtin"),
     
     _TAG("_:", "tag"),
     ANYTAG("any:", "tag"),
@@ -196,7 +196,14 @@ public enum PawnTokenId implements TokenId {
                 PawnTokenId._TAG,
                 PawnTokenId.ANYTAG,
                 PawnTokenId.BOOLTAG,
-                PawnTokenId.FLOATTAG
+                PawnTokenId.FLOATTAG,
+                
+                // Built-in types (actually other representations for tags)
+                PawnTokenId.BOOL,  // bool:
+                PawnTokenId.CHAR,  // String:
+                PawnTokenId.FLOAT, // Float:
+                PawnTokenId.INT,   // _:
+                PawnTokenId.VOID   // any:
             );
             
             categories.put("tag", tags);
