@@ -392,12 +392,19 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                 case 'd':
                     switch (ch = nextChar()) {
                         case 'e':
-                            if ((ch = nextChar()) == 'f'
-                             && (ch = nextChar()) == 'a'
-                             && (ch = nextChar()) == 'u'
-                             && (ch = nextChar()) == 'l'
-                             && (ch = nextChar()) == 't')
-                                return keywordIdentifierOrTag(PawnTokenId.DEFAULT);
+                            switch (ch = nextChar()) {
+                                case 'c':
+                                    if ((ch = nextChar()) == 'l')
+                                        return keywordIdentifierOrTag(PawnTokenId.DECL);
+                                    break;
+                                case 'f':
+                                    if ((ch = nextChar()) == 'a'
+                                     && (ch = nextChar()) == 'u'
+                                     && (ch = nextChar()) == 'l'
+                                     && (ch = nextChar()) == 't')
+                                        return keywordIdentifierOrTag(PawnTokenId.DEFAULT);
+                                    break;
+                            }
                             break;
                         case 'o':
                             return keywordIdentifierOrTag(PawnTokenId.DO);

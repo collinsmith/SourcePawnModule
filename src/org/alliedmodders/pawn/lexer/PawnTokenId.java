@@ -28,6 +28,7 @@ public enum PawnTokenId implements TokenId {
     CASE("case", "keyword-directive"),
     CONST("const", "keyword"),
     CONTINUE("continue", "keyword-directive"),
+    DECL("default", "keyword"),
     DEFAULT("default", "keyword-directive"),
     DO("do", "keyword-directive"),
     ELSE("else", "keyword-directive"),
