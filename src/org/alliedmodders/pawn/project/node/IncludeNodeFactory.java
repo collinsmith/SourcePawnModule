@@ -2,6 +2,7 @@ package org.alliedmodders.pawn.project.node;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.Action;
@@ -36,6 +37,7 @@ public class IncludeNodeFactory implements NodeFactory {
 	return new IncludeNodeList(p);
     }
     
+    @SuppressWarnings("unchecked")
     private static class IncludeNodeList implements NodeList<Node> {
 	PawnProject project;
 	
@@ -77,38 +79,45 @@ public class IncludeNodeFactory implements NodeFactory {
 	    });
 	    
 	    folderResult.addAll(fileResult);
-            
-            Children children = new Index.ArrayChildren();
-            children.add(folderResult.toArray(new Node[0]));
-            Node sourceNode = new AbstractNode(children, project.getLookup()) {
-                
-                @Override
-                public Image getIcon(int type) {
-                    return ImageUtilities.loadImage(PawnProject.PawnProjectLogicalView.FOLDER_ICON);
-                }
 
-                @Override
-                public Image getOpenedIcon(int type) {
-                    return getIcon(type);
-                }
+            try {
+                Children children = new Index.ArrayChildren();
+                children.add(folderResult.toArray(new Node[0]));
+                Node sourceNode = new FilterNode(
+                        DataObject.find(textsFolder).getNodeDelegate(),
+                        children) {
 
-                @Override
-                public String getDisplayName() {
-                    return "Include";
-                }
+                    @Override
+                    public Image getIcon(int type) {
+                        return ImageUtilities.loadImage(PawnProject.PawnProjectLogicalView.FOLDER_ICON);
+                    }
 
-                @Override
-                public Action[] getActions(boolean context) {
-                    return new Action[] {
-                        CommonProjectActions.newFileAction()
-                    };
-                }
-                
-            };
-            
-            List<Node> finalList = new ArrayList<>(1);
-            finalList.add(sourceNode);
-	    return finalList;
+                    @Override
+                    public Image getOpenedIcon(int type) {
+                        return getIcon(type);
+                    }
+
+                    @Override
+                    public String getDisplayName() {
+                        return "Include";
+                    }
+
+                    @Override
+                    public Action[] getActions(boolean context) {
+                        return new Action[] {
+                            CommonProjectActions.newFileAction()
+                        };
+                    }
+
+                };
+
+                List<Node> finalList = new ArrayList<>(1);
+                finalList.add(sourceNode);
+                return finalList;
+            } catch (DataObjectNotFoundException e) {
+                Exceptions.printStackTrace(e);
+                return Collections.EMPTY_LIST;
+            }
 	}
 
 	@Override
