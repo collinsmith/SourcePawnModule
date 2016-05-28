@@ -478,6 +478,18 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                     }
                     return finishIdentifierOrTag(ch);
 
+                case 'm':
+                    if ((ch = nextChar()) == 'e'
+                     && (ch = nextChar()) == 't'
+                     && (ch = nextChar()) == 'h'
+                     && (ch = nextChar()) == 'o'
+                     && (ch = nextChar()) == 'd'
+                     && (ch = nextChar()) == 'm'
+                     && (ch = nextChar()) == 'a'
+                     && (ch = nextChar()) == 'p')
+                       return keywordIdentifierOrTag(PawnTokenId.METHODMAP);
+                    return finishIdentifierOrTag(ch);
+                    
                 case 'n':
                     switch (ch = nextChar()) {
                         case 'a':
@@ -632,8 +644,8 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                     return keywordIdentifierOrTag(PawnTokenId.UNDERSCORE);
                     
                 // Rest of lowercase letters starting identifiers
-                case 'h': case 'j': case 'k': case 'l': case 'm':
-                case 'q': case 'u': case 'x': case 'y': case 'z':
+                case 'h': case 'j': case 'k': case 'l': case 'q':
+                case 'u': case 'x': case 'y': case 'z':
                 // Uppercase letters starting identifiers
                 case 'A': case 'B': case 'C': case 'D': case 'E':
                 case 'G': case 'H': case 'I': case 'J': case 'K':
