@@ -588,6 +588,11 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                              && (ch = nextChar()) == 'f')
                                 return keywordIdentifierOrTag(PawnTokenId.TAGOF);
                             break;
+                        case 'h':
+                            if ((ch = nextChar()) == 'i'
+                             && (ch = nextChar()) == 's')
+                                return keywordIdentifierOrTag(PawnTokenId.THIS);
+                            break;
                         case 'r':
                             if ((ch = nextChar()) == 'u'
                              && (ch = nextChar()) == 'e')

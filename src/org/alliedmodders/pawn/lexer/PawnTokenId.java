@@ -38,6 +38,7 @@ public enum PawnTokenId implements TokenId {
     GOTO("goto", "keyword-directive"),
     IF("if", "keyword-directive"),
     IN("in", "keyword-directive"),
+    METHODMAP("methodmap", "keyword"),
     NATIVE("native", "keyword"),
     NEW("new", "keyword"),
     NULL("null", "keyword"),
@@ -50,6 +51,7 @@ public enum PawnTokenId implements TokenId {
     STOCK("stock", "keyword"),
     SWITCH("switch", "keyword-directive"),
     TAGOF("tagof", "keyword-directive"),
+    THIS("this", "keyword"),
     VIEW_AS("view_as", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
