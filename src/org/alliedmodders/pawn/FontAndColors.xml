@@ -17,10 +17,7 @@
     </fontcolor>
     
     <fontcolor name="tag-builtin"
-               default="tag"
-               foreColor="1B8B7D">
-        <font style="bold"/>
-    </fontcolor>
+               default="keyword"/>
     
     <fontcolor name="keyword"
                default="keyword"/>
