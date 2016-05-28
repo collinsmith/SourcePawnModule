@@ -82,6 +82,7 @@ public enum PawnPreprocessorTokenId implements TokenId {
     PRAGMA_DYNAMIC("dynamic", "preprocessor-pragma"),
     PRAGMA_LIBRARY("library", "preprocessor-pragma"),
     PRAGMA_LOADLIB("loadlib", "preprocessor-pragma"),
+    PRAGMA_NEWDECLS("newdecls", "preprocessor-pragma"),
     PRAGMA_OVERLAY("overlay", "preprocessor-pragma"),
     PRAGMA_RATIONAL("rational", "preprocessor-pragma"),
     PRAGMA_REQLIB("reqlib", "preprocessor-pragma"),

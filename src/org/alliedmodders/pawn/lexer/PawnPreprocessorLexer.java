@@ -539,8 +539,19 @@ public class PawnPreprocessorLexer extends AbstractPawnLexer<PawnPreprocessorTok
                             return directiveOrIdentifier(PawnPreprocessorTokenId.KEYWORD_NATIVE);
                         break;
                     case 'e':
-                        if ((ch = nextChar()) == 'w')
-                            return directiveOrIdentifier(PawnPreprocessorTokenId.KEYWORD_NEW);
+                        if ((ch = nextChar()) == 'w') {
+                            switch (ch = nextChar()) {
+                                case 'd':
+                                    if ((ch = nextChar()) == 'e'
+                                     && (ch = nextChar()) == 'c'
+                                     && (ch = nextChar()) == 'l'
+                                     && (ch = nextChar()) == 's')
+                                        return directiveOrIdentifier(PawnPreprocessorTokenId.PRAGMA_NEWDECLS);
+                                    break;
+                                default:
+                                    return directiveOrIdentifier(PawnPreprocessorTokenId.KEYWORD_NEW, ch);
+                            }
+                        }
                         break;
                 }
                 return finishIdentifierOrTag(ch);
