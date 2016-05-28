@@ -767,6 +767,7 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                 backup(1);
                 return token(keywordId);
             } else if (PawnTokenId.language().tokenCategories(keywordId).contains("tag-builtin")) {
+                backup(1);
                 return token(keywordId);
             } else
                 return finishIdentifierOrTag();
