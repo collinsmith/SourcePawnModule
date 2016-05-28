@@ -604,6 +604,14 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                              && (ch = nextChar()) == 'e')
                                 return keywordIdentifierOrTag(PawnTokenId.TRUE);
                             break;
+                        case 'y':
+                            if ((ch = nextChar()) == 'p'
+                             && (ch = nextChar()) == 'e'
+                             && (ch = nextChar()) == 'd'
+                             && (ch = nextChar()) == 'e'
+                             && (ch = nextChar()) == 'f')
+                                return keywordIdentifierOrTag(PawnTokenId.TYPEDEF);
+                            break;
                     }
                     
                     return finishIdentifierOrTag(ch);

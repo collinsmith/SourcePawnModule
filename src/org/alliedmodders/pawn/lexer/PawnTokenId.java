@@ -53,6 +53,7 @@ public enum PawnTokenId implements TokenId {
     SWITCH("switch", "keyword-directive"),
     TAGOF("tagof", "keyword-directive"),
     THIS("this", "keyword"),
+    TYPEDEF("typedef", "keyword"),
     VIEW_AS("view_as", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
