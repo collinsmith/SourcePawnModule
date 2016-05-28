@@ -50,6 +50,7 @@ public enum PawnTokenId implements TokenId {
     STATE("state", "keyword-directive"),
     STATIC("static", "keyword"),
     STOCK("stock", "keyword"),
+    STRUCT("struct", "keyword"),
     SWITCH("switch", "keyword-directive"),
     TAGOF("tagof", "keyword-directive"),
     THIS("this", "keyword"),
