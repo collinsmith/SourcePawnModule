@@ -21,6 +21,8 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.nodes.NodeAdapter;
+import org.openide.nodes.NodeMemberEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -91,9 +93,12 @@ public class PawnProject implements Project {
 	}
     }
     
-    static class PawnProjectLogicalView implements LogicalViewProvider {
+    public static class PawnProjectLogicalView implements LogicalViewProvider {
 	@StaticResource
 	public static final String PAWN_ICON = "org/alliedmodders/pawn/project/icon.png";
+        
+        @StaticResource
+	public static final String FOLDER_ICON = "org/alliedmodders/pawn/project/folder.png";
 	
 	private final PawnProject project;
 

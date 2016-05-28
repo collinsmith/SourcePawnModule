@@ -19,11 +19,10 @@ import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 
 @NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 10)
-public class SourceNodeFactory implements NodeFactory {
-    private SourceNodeFactory() {
+public class IncludeNodeFactory implements NodeFactory {
+    private IncludeNodeFactory() {
         //...
     }
 
@@ -31,29 +30,25 @@ public class SourceNodeFactory implements NodeFactory {
     public NodeList<?> createNodes(Project project) {
 	PawnProject p = project.getLookup().lookup(PawnProject.class);
 	assert p != null : "PawnProject should have been added to its own lookups";
-	return new SourceNodeList(p);
+	return new IncludeNodeList(p);
     }
     
-    private static class SourceNodeList implements NodeList<Node> {
+    private static class IncludeNodeList implements NodeList<Node> {
 	PawnProject project;
 	
-	SourceNodeList(PawnProject project) {
+	IncludeNodeList(PawnProject project) {
 	    this.project = project;
 	}
 
 	@Override
 	public List<Node> keys() {
-	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src");
+	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src").getFileObject("include");
 	    List<Node> fileResult = new ArrayList<>();
 	    List<Node> folderResult = new ArrayList<>();
 	    if (textsFolder != null) {
 		for (FileObject textsFolderFile : textsFolder.getChildren()) {
 		    try {
                         if (textsFolderFile.isFolder()) {
-                            if (textsFolderFile.getName().equals("include")) {
-                                continue;
-                            }
-                            
 			    folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
 			} else {
 			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
@@ -77,7 +72,7 @@ public class SourceNodeFactory implements NodeFactory {
 		    return o1.getName().compareTo(o2.getName());
 		}
 	    });
-            
+	    
 	    folderResult.addAll(fileResult);
             
             Children children = new Index.ArrayChildren();
@@ -96,7 +91,7 @@ public class SourceNodeFactory implements NodeFactory {
 
                 @Override
                 public String getDisplayName() {
-                    return "Source";
+                    return "Include";
                 }
                 
             };
