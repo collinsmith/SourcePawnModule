@@ -1,24 +1,24 @@
 @TemplateRegistrations(value = {
     @TemplateRegistration(
-	folder = "Pawn",
+	folder = "SourcePawn",
 	displayName = "#emptyPawnScript_displayName",
 	description = "./emptyPawnScript/emptyPawnScript.html",
 	content = "./emptyPawnScript/emptyPawnScript.sp",
 	scriptEngine = "freemarker"),
     @TemplateRegistration(
-	folder = "Pawn",
+	folder = "SourcePawn",
 	displayName = "#pawnScript_displayName",
 	description = "./pawnScript/pawnScript.html",
 	content = "./pawnScript/pawnScript.sp",
 	scriptEngine = "freemarker"),
     @TemplateRegistration(
-	folder = "Pawn",
+	folder = "SourcePawn",
 	displayName = "#emptyIncludeFile_displayName",
 	description = "./emptyIncludeFile/emptyIncludeFile.html",
 	content = "./emptyIncludeFile/emptyIncludeFile.inc",
 	scriptEngine = "freemarker"),
     @TemplateRegistration(
-	folder = "Pawn",
+	folder = "SourcePawn",
 	displayName = "#includeFile_displayName",
 	description = "./includeFile/includeFile.html",
 	content = "./includeFile/includeFile.inc",

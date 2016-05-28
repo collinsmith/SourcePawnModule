@@ -38,8 +38,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/Pawn", displayName = "#EmptyPawnProject_displayName", description = "EmptyPawnProjectDescription.html", iconBase = "org/alliedmodders/pawn/project/sample/project/empty/EmptyPawnProject.png", content = "EmptyPawnProjectProject.zip")
-@Messages("EmptyPawnProject_displayName=Empty Pawn Project")
+@TemplateRegistration(
+        folder = "Project/SourcePawn",
+        displayName = "#EmptyPawnProject_displayName",
+        description = "EmptyPawnProjectDescription.html",
+        iconBase = "org/alliedmodders/pawn/project/sample/project/empty/EmptyPawnProject.png",
+        content = "EmptyPawnProjectProject.zip")
 @SuppressWarnings("rawtypes")
 public class EmptyPawnProjectWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
