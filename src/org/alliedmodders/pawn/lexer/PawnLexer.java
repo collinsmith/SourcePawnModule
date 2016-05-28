@@ -656,6 +656,15 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                         return keywordIdentifierOrTag(PawnTokenId.FLOATTAG);
                     return finishIdentifierOrTag(ch);
                     
+                case 'H':
+                    if ((ch = nextChar()) == 'a'
+                     && (ch = nextChar()) == 'n'
+                     && (ch = nextChar()) == 'd'
+                     && (ch = nextChar()) == 'l'
+                     && (ch = nextChar()) == 'e')
+                        return keywordIdentifierOrTag(PawnTokenId.HANDLE);
+                    return finishIdentifierOrTag(ch);
+                    
                 case 'S':
                     if ((ch = nextChar()) == 't'
                      && (ch = nextChar()) == 'r'
@@ -673,10 +682,10 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                 case 'u': case 'x': case 'y': case 'z':
                 // Uppercase letters starting identifiers
                 case 'A': case 'B': case 'C': case 'D': case 'E':
-                case 'G': case 'H': case 'I': case 'J': case 'K':
-                case 'L': case 'M': case 'N': case 'O': case 'P':
-                case 'Q': case 'R': case 'T': case 'U': case 'V':
-                case 'W': case 'X': case 'Y': case 'Z': case '@':
+                case 'G': case 'I': case 'J': case 'K': case 'L':
+                case 'M': case 'N': case 'O': case 'P': case 'Q':
+                case 'R': case 'T': case 'U': case 'V': case 'W':
+                case 'X': case 'Y': case 'Z': case '@':
                     return finishIdentifierOrTag();
                     
                 // All Character.isWhitespace(c) below 0x80 follow

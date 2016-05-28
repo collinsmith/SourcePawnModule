@@ -61,6 +61,7 @@ public enum PawnTokenId implements TokenId {
     BOOL("bool", "tag-builtin"),
     CHAR("char", "tag-builtin"),
     FLOAT("float", "tag-builtin"),
+    HANDLE("Handle", "tag-builtin"),
     INT("int", "tag-builtin"),
     VOID("void", "tag-builtin"),
     
@@ -200,11 +201,12 @@ public enum PawnTokenId implements TokenId {
                 PawnTokenId.FLOATTAG,
                 
                 // Built-in types (actually other representations for tags)
-                PawnTokenId.BOOL,  // bool:
-                PawnTokenId.CHAR,  // String:
-                PawnTokenId.FLOAT, // Float:
-                PawnTokenId.INT,   // _:
-                PawnTokenId.VOID   // any:
+                PawnTokenId.BOOL,   // bool:
+                PawnTokenId.CHAR,   // String:
+                PawnTokenId.FLOAT,  // Float:
+                PawnTokenId.HANDLE, // Handle:
+                PawnTokenId.INT,    // _:
+                PawnTokenId.VOID    // any:
             );
             
             categories.put("tag", tags);
