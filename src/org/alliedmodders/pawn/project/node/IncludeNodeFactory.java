@@ -4,9 +4,11 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 import org.alliedmodders.pawn.project.PawnProject;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
@@ -19,6 +21,7 @@ import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.datatransfer.NewType;
 
 @NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 10)
 public class IncludeNodeFactory implements NodeFactory {
@@ -78,7 +81,7 @@ public class IncludeNodeFactory implements NodeFactory {
             Children children = new Index.ArrayChildren();
             children.add(folderResult.toArray(new Node[0]));
             Node sourceNode = new AbstractNode(children, project.getLookup()) {
-
+                
                 @Override
                 public Image getIcon(int type) {
                     return ImageUtilities.loadImage(PawnProject.PawnProjectLogicalView.FOLDER_ICON);
@@ -92,6 +95,13 @@ public class IncludeNodeFactory implements NodeFactory {
                 @Override
                 public String getDisplayName() {
                     return "Include";
+                }
+
+                @Override
+                public Action[] getActions(boolean context) {
+                    return new Action[] {
+                        CommonProjectActions.newFileAction()
+                    };
                 }
                 
             };

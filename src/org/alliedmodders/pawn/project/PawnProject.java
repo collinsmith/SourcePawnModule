@@ -12,6 +12,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.openide.filesystems.FileObject;
@@ -21,8 +23,6 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.nodes.NodeAdapter;
-import org.openide.nodes.NodeMemberEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -52,9 +52,20 @@ public class PawnProject implements Project {
 		new Info(),
 		new PawnProjectLogicalView(this),
 		new PawnProjectCustomizerProvider(this),
+                new PrivilegedTemplates() {
+                    @Override
+                    public String[] getPrivilegedTemplates() {
+                        return new String[] {
+                            "Templates/SourcePawn/pawnScript.sp",
+                            "Templates/SourcePawn/includeFile.inc",
+                            "Templates/SourcePawn/emptyPawnScript.sp",
+                            "Templates/SourcePawn/emptyIncludeFile.inc",
+                        };
+                    }
+                }
 	    });
 	}
-	
+        
 	return lookup;
     }
     
