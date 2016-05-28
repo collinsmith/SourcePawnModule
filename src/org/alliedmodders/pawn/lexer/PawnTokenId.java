@@ -51,11 +51,11 @@ public enum PawnTokenId implements TokenId {
     TAGOF("tagof", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
-    BOOL("bool", "keyword"),
-    CHAR("char", "keyword"),
-    FLOAT("float", "keyword"),
-    INT("int", "keyword"),
-    VOID("void", "keyword"),
+    BOOL("bool", "tag"),
+    CHAR("char", "tag"),
+    FLOAT("float", "tag"),
+    INT("int", "tag"),
+    VOID("void", "tag"),
     
     _TAG("_:", "tag"),
     ANYTAG("any:", "tag"),
