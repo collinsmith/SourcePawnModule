@@ -338,8 +338,14 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                     switch (ch = nextChar()) {
                         case 'o':
                             if ((ch = nextChar()) == 'o'
-                             && (ch = nextChar()) == 'l')
-                                return keywordIdentifierOrTag(PawnTokenId.BOOLTAG);
+                             && (ch = nextChar()) == 'l') {
+                                switch (ch = nextChar()) {
+                                    case ':':
+                                        return token(PawnTokenId.BOOLTAG);
+                                    default:
+                                        return keywordIdentifierOrTag(PawnTokenId.BOOL, ch);
+                                }
+                            }
                             break;
                         case 'r':
                             if ((ch = nextChar()) == 'e'
@@ -357,6 +363,11 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                             if ((ch = nextChar()) == 's'
                              && (ch = nextChar()) == 'e')
                                 return keywordIdentifierOrTag(PawnTokenId.CASE);
+                            break;
+                        case 'h':
+                            if ((ch = nextChar()) == 'a'
+                             && (ch = nextChar()) == 'r')
+                                return keywordIdentifierOrTag(PawnTokenId.CHAR);
                             break;
                         case 'o':
                             if ((ch = nextChar()) == 'n') {
@@ -416,8 +427,13 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                              && (ch = nextChar()) == 'e')
                                 return keywordIdentifierOrTag(PawnTokenId.FALSE);
                             break;
+                        case 'l':
+                            if ((ch = nextChar()) == 'o'
+                             && (ch = nextChar()) == 'a'
+                             && (ch = nextChar()) == 't')
+                                return keywordIdentifierOrTag(PawnTokenId.FLOAT);
+                            break;
                         case 'o':
-                            
                             if ((ch = nextChar()) == 'r') {
                                 switch (ch = nextChar()) {
                                     case 'w':
@@ -445,6 +461,13 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                     switch (ch = nextChar()) {
                         case 'f':
                             return keywordIdentifierOrTag(PawnTokenId.IF);
+                        case 'n':
+                            switch (ch = nextChar()) {
+                                case 't':
+                                    return keywordIdentifierOrTag(PawnTokenId.FORWARD);
+                                default:
+                                    return keywordIdentifierOrTag(PawnTokenId.IN, ch);
+                            }
                     }
                     return finishIdentifierOrTag(ch);
 
@@ -460,6 +483,11 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                         case 'e':
                             if ((ch = nextChar()) == 'w')
                                 return keywordIdentifierOrTag(PawnTokenId.NEW);
+                            break;
+                        case 'u':
+                            if ((ch = nextChar()) == 'l'
+                             && (ch = nextChar()) == 'l')
+                                return keywordIdentifierOrTag(PawnTokenId.NULL);
                             break;
                     }
                     return finishIdentifierOrTag(ch);
@@ -558,6 +586,13 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                         return keywordIdentifierOrTag(PawnTokenId.WHILE);
                     return finishIdentifierOrTag(ch);
                     
+                case 'v':
+                    if ((ch = nextChar()) == 'o'
+                     && (ch = nextChar()) == 'i'
+                     && (ch = nextChar()) == 'd')
+                        return keywordIdentifierOrTag(PawnTokenId.VOID);
+                    return finishIdentifierOrTag(ch);
+                    
                 case 'F':
                     if ((ch = nextChar()) == 'l'
                      && (ch = nextChar()) == 'o'
@@ -565,21 +600,28 @@ public class PawnLexer extends AbstractPawnLexer<PawnTokenId> {
                      && (ch = nextChar()) == 't')
                         return keywordIdentifierOrTag(PawnTokenId.FLOATTAG);
                     return finishIdentifierOrTag(ch);
+                    
+                case 'S':
+                    if ((ch = nextChar()) == 't'
+                     && (ch = nextChar()) == 'r'
+                     && (ch = nextChar()) == 'i'
+                     && (ch = nextChar()) == 'n'
+                     && (ch = nextChar()) == 'g')
+                        return keywordIdentifierOrTag(PawnTokenId.STRINGTAG);
+                    return finishIdentifierOrTag(ch);
                 
                 case '_':
                     return keywordIdentifierOrTag(PawnTokenId.UNDERSCORE);
                     
                 // Rest of lowercase letters starting identifiers
                 case 'h': case 'j': case 'k': case 'l': case 'm':
-                case 'q': case 'u': case 'v': case 'x': case 'y':
-                case 'z':
+                case 'q': case 'u': case 'x': case 'y': case 'z':
                 // Uppercase letters starting identifiers
                 case 'A': case 'B': case 'C': case 'D': case 'E':
                 case 'G': case 'H': case 'I': case 'J': case 'K':
                 case 'L': case 'M': case 'N': case 'O': case 'P':
-                case 'Q': case 'R': case 'S': case 'T': case 'U':
-                case 'V': case 'W': case 'X': case 'Y': case 'Z':
-                case '@':
+                case 'Q': case 'R': case 'T': case 'U': case 'V':
+                case 'W': case 'X': case 'Y': case 'Z': case '@':
                     return finishIdentifierOrTag();
                     
                 // All Character.isWhitespace(c) below 0x80 follow
