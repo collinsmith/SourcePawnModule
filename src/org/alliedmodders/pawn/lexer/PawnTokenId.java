@@ -49,6 +49,7 @@ public enum PawnTokenId implements TokenId {
     STOCK("stock", "keyword"),
     SWITCH("switch", "keyword-directive"),
     TAGOF("tagof", "keyword-directive"),
+    VIEW_AS("view_as", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
     BOOL("bool", "tag"),
