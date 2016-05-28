@@ -58,7 +58,7 @@ public class SourceNodeFactory implements NodeFactory {
                             }
                             
 			    folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			} else {
+			} else if (textsFolderFile.getExt().equalsIgnoreCase("sp")) {
 			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
 			}
 		    } catch (DataObjectNotFoundException ex) {
