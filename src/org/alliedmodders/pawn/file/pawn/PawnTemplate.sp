@@ -13,7 +13,7 @@ public Plugin pluginInfo = {
 };
 
 // Single line comment
-new const String: g_szHelloWorld[] = "Hello World";
+char g_szHelloWorld[] = "Hello World";
 
 public void OnPluginStart() {
     PrintHelloWorld(0);
