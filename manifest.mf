@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.alliedmodders.pawn
+OpenIDE-Module-Layer: org/alliedmodders/pawn/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/alliedmodders/pawn/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

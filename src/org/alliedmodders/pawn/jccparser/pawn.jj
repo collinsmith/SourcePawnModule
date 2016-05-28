@@ -1,0 +1,468 @@
+options {
+    ERROR_REPORTING = true;
+    STATIC = false;
+    TOKEN_FACTORY = "Token";
+    JDK_VERSION = "1.8";
+    BUILD_PARSER = true;
+}
+
+PARSER_BEGIN(PawnParser)
+
+package org.alliedmodders.pawn.jccparser;
+
+import java.io.*;
+import java.util.*;
+
+public class PawnParser {
+    private static final String PARSER_VERSION_STR = "0.0.1";
+
+    public static void main(String[] args) {
+	System.out.printf("Pawn Parser %s%n", PARSER_VERSION_STR);
+	PawnParser parser;
+	switch (args.length) {
+	    case 0:
+		System.out.println("Reading from standard input . . .");
+		parser = new PawnParser(System.in);
+		break;
+	    case 1:
+		System.out.printf("Reading from file '%s' . . .%n", args[0]);
+		try {
+		    parser = new PawnParser(new FileInputStream(args[0]));
+		} catch (FileNotFoundException e) {
+		    System.out.printf("File '%s' not found%n", args[0]);
+		    return;
+		}
+		
+		break;
+	    default:
+		System.out.println("Usage:");
+		System.out.println("\tjava PawnParser < inputFile");
+		System.out.println("\tjava PawnParser inputFile");
+		System.out.println("Exiting parser . . .");
+		return;
+	}
+
+	try {
+	    parser.CompilationUnit();
+	    System.out.println("Pawn program parsed successfully.");
+	} catch (ParseException e) {
+	    System.out.println("Encoutered errors during parse.");
+	    e.printStackTrace();
+	}
+    }
+}
+
+PARSER_END(PawnParser)
+
+/* WHITESPACE */
+
+SKIP : {
+    <WHITESPACE
+    :   " "
+    |   "\t"
+    >
+}
+
+SPECIAL_TOKEN : {
+    <NEWLINE
+    :   "\n"
+    |   "\r"
+    |   "\r\n"
+    >
+}
+
+/* COMMENTS */
+
+SPECIAL_TOKEN : {
+    <SINGLE_LINE_COMMENT
+    :   "//" (~["\n", "\r"])* ("\n" | "\r" | "\r\n")?
+    >
+}
+
+MORE : {
+    "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_MULTI_LINE_COMMENT>
+MORE : {
+    < ~[] >
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN : {
+    <MULTI_LINE_COMMENT
+    :   ("*/")?
+    > : DEFAULT
+}
+
+/* LITERALS */
+
+TOKEN : {
+    <ZERO_INTEGER_LITERAL
+    :   ( <BINARY_PREFIX> | <HEXADECIMAL_PREFIX> )? <ZERO>
+    >
+    |   <#ZERO
+        :   ("0")+
+        >
+    |   <#BINARY_PREFIX
+        :   "0b"
+        >
+    |   <#HEXADECIMAL_PREFIX
+        :   "0" ("x" | "X")
+        >
+|   <POSITIVE_INTEGER_LITERAL
+    :   <POSITIVE_DECIMAL_LITERAL>
+    |   <POSITIVE_BINARY_LITERAL>
+    |   <POSITIVE_HEXADECIMAL_LITERAL>
+    >
+    |   <#POSITIVE_DECIMAL_LITERAL
+        :   ("0")* (<NONZERO_DECIMAL_DIGIT>)+ (<DECIMAL_DIGIT>)*
+        >
+        |   <#NONZERO_DECIMAL_DIGIT
+            :   ["1"-"9"]
+            >
+        |   <#DECIMAL_DIGIT
+            :   ["0"-"9"]
+            >
+    |   <#POSITIVE_BINARY_LITERAL
+        :   <BINARY_PREFIX> ("0")* (<NONZERO_BINARY_DIGIT>)+ (<BINARY_DIGIT>)*
+        >
+        |   <#NONZERO_BINARY_DIGIT
+            :   ("1")
+            >
+        |   <#BINARY_DIGIT
+            :   ("0" | "1")
+            >
+    |   <#POSITIVE_HEXADECIMAL_LITERAL
+        :   <HEXADECIMAL_PREFIX> ("0")* (<NONZERO_HEXADECIMAL_DIGIT>)+ (<HEXADECIMAL_DIGIT>)*
+        >
+        |   <#NONZERO_HEXADECIMAL_DIGIT
+            :   ["1"-"9", "a"-"f", "A"-"F"]
+            >
+        |   <#HEXADECIMAL_DIGIT
+            :   ["0"-"9", "a"-"f", "A"-"F"]
+            >
+|   <NEGATIVE_INTEGER_LITERAL
+    :   "-" <POSITIVE_INTEGER_LITERAL>
+    >
+|   <RATIONAL_LITERAL
+    :   <DECIMAL_LITERAL> "." <DECIMAL_LITERAL> (<EXPONENT_PART>)?
+    >
+    |   <#DECIMAL_LITERAL
+        :   (<DECIMAL_DIGIT>)+
+        >
+    |   <#EXPONENT_PART
+        :   "e" <DECIMAL_LITERAL>
+        >
+|   <CHARACTER_LITERAL
+    :   "'"
+        (    ~["'", "\\", "\n", "\r"]
+        |     <ESCAPED_SEQUENCE>
+        )
+        "'"
+    >
+    |   <ESCAPED_SEQUENCE
+    :   "\\" <ESCAPE_SEQUENCE>
+    >
+    |   <#ESCAPE_SEQUENCE
+        :   <DEFINED_ESCAPE>
+        |   <DECIMAL_LITERAL> (";")?
+        |   <HEXADECIMAL_LITERAL> (";")?
+        >
+        |   <#DEFINED_ESCAPE
+            :   ["a", "b", "e", "f", "n", "r", "t", "v", "\\", "'", "\"", "%"]
+            >
+        |   <#HEXADECIMAL_LITERAL
+            :   <HEXADECIMAL_PREFIX> (<HEXADECIMAL_DIGIT>)+
+            >
+|   <STRING_LITERAL
+    :   "\""
+        (    ~["\"", "\\", "\n", "\r"]
+        |     <ESCAPED_SEQUENCE>
+        )*
+        "\""
+    >
+}
+
+/* KEYWORDS AND OTHER RESERVED WORDS */
+
+TOKEN : {
+    <UNDERSCORE: "_" >
+|   <ASSERT: "assert" >
+|   <BREAK: "break" >
+|   <CASE: "case" >
+|   <CONST: "const" >
+|   <CONTINUE: "continue" >
+|   <_DEFAULT: "default" >
+|   <DEFINED: "defined" >
+|   <DO: "do" >
+|   <ELSE: "else" >
+|   <ENUM: "enum" >
+|   <EXIT: "exit" >
+|   <FALSE: "false" >
+|   <FOR: "for" >
+|   <FORWARD: "forward" >
+|   <GOTO: "goto" >
+|   <IF: "if" >
+|   <NATIVE: "native" >
+|   <NEW: "new" >
+|   <OPERATOR: "operator" >
+|   <PUBLIC: "public" >
+|   <RETURN: "return" >
+|   <SIZEOF: "sizeof" >
+|   <SLEEP: "sleep" >
+|   <STATE: "state" >
+|   <STATIC: "static" >
+|   <STOCK: "stock" >
+|   <SWITCH: "switch" >
+|   <TAGOF: "tagof" >
+|   <TRUE: "true" >
+|   <WHILE: "while" >
+}
+
+/* TAGS/LABELS */
+
+TOKEN : {
+    <TAG
+    :   (<IDENTIFIER> | <ANY_TAG> | <BOOL_TAG>) ":"
+    >
+    |   <#ANY_TAG
+        :   "_"
+        |   "any"
+        >
+    |   <#BOOL_TAG
+        :   "bool"
+        >
+}
+
+/* IDENTIFIERS */
+
+TOKEN : {
+    <IDENTIFIER
+    :   <SYMBOL> (<SYMBOL> | <LETTER> | <DIGIT>)+
+    |   <LETTER> (<SYMBOL> | <LETTER> | <DIGIT>)*
+    >
+    |   <#SYMBOL
+        :   ("_" | "@")
+        >
+    |   <#LETTER
+        :   ["a"-"z", "A"-"Z"]
+        >
+    |   <#DIGIT
+        :   ["0"-"9"]
+        >
+}
+
+/* SEPARATORS */
+
+TOKEN : {
+    <LPAREN: "(" >
+|   <RPAREN: ")" >
+|   <LBRACE: "{" >
+|   <RBRACE: "}" >
+|   <LBRACKET: "[" >
+|   <RBRACKET: "]" >
+|   <SEMICOLON: ";" >
+|   <COMMA: "," >
+|   <DOT: "." >
+}
+
+/* OPERATORS */
+
+TOKEN : {
+    <PLUS: "+" >
+|   <MINUS: "-" >
+|   <STAR: "*" >
+|   <SLASH: "/" >
+|   <REM: "%" >
+|   <INCR: "++" >
+|   <DECR: "--" >
+|   <RSHIFT: ">>" >
+|   <RUNSIGNEDSHIFT: ">>>" >
+|   <LSHIFT: "<<" >
+|   <BIT_AND: "&" >
+|   <BIT_OR: "|" >
+|   <XOR: "^" >
+|   <ASSIGN: "=" >
+|   <PLUSASSIGN: "+=" >
+|   <MINUSASSIGN: "-=" >
+|   <STARASSIGN: "*=" >
+|   <SLASHASSIGN: "/=" >
+|   <ANDASSIGN: "&=" >
+|   <ORASSIGN: "|=" >
+|   <XORASSIGN: "^=" >
+|   <REMASSIGN: "%=" >
+|   <LSHIFTASSIGN: "<<=" >
+|   <RSIGNEDSHIFTASSIGN: ">>=" >
+|   <RUNSIGNEDSHIFTASSIGN: ">>>=" >
+|   <EQ: "==" >
+|   <NE: "!=" >
+|   <LT: "<" >
+|   <LE: "<=" >
+|   <GT: ">" >
+|   <GE: ">=" >
+|   <BANG: "!" >
+|   <SC_OR: "||" >
+|   <SC_AND: "&&" >
+|   <TILDE: "~" >
+|   <HOOK: "?" >
+|   <COLON: ":" >
+|   <ELLIPSIS: "..." >
+|   <ESCAPE: "\\" >
+}
+
+/*****************************************
+ * THE PAWN LANGUAGE GRAMMAR STARTS HERE *
+ *****************************************/
+
+void CompilationUnit() : {} {
+    (	Declaration()
+    )*
+    <EOF>
+}
+
+void EndOfStatement() : {} {
+    <SEMICOLON>
+}
+
+void Declaration() : {} {
+    LOOKAHEAD( <NATIVE> | <FORWARD> )
+    PrototypeDeclaration()
+|   FunctionOrPrototypeDeclaration()
+}
+
+void PrototypeDeclaration() : {} {
+    PrototypeClassSpecifier() Identifier() FormalParameters() EndOfStatement()
+}
+
+void PrototypeClassSpecifier() : {} {
+    <NATIVE>
+|   <FORWARD>
+}
+
+void FunctionOrPrototypeDeclaration() : {} {
+    [FunctionClassSpecifier()] Identifier() FormalParameters()
+    (   <LBRACE> FunctionBody()
+    )
+}
+
+void FunctionClassSpecifier() : {} {
+    <PUBLIC>
+|   <STATIC>
+|   <STOCK>
+}
+
+void Identifier() : {} {
+    [Tag()] <IDENTIFIER>
+}
+
+void Tag() : {} {
+    <TAG>
+}
+
+void FormalParameters() : {} {
+    <LPAREN>
+    (	LOOKAHEAD( [Tag()] <ELLIPSIS> ) FormalParameterEllipsis()
+    |	[   FormalParameter()
+	(   LOOKAHEAD( <COMMA> FormalParameter() <COMMA> )
+	    <COMMA> FormalParameter() )*
+	[   <COMMA> FormalParameterEllipsis() ]
+	]
+    )
+    <RPAREN>
+}
+
+void FormalParameterEllipsis() : {} {
+    [Tag()] <ELLIPSIS>
+}
+
+void FormalParameter() : {} {
+    [StorageSpecifier()]
+    (	ByRefVariableDeclarator()
+    |	VariableDeclarator()
+    )
+}
+
+void StorageSpecifier() : {} {
+    <CONST>
+}
+
+void ByRefVariableDeclarator() : {} {
+    ByRef() Identifier() [ <ASSIGN> NumericLiteral() ]
+}
+
+void ByRef() : {} {
+    <BIT_AND>
+}
+
+void NumericLiteral() : {} {
+    IntegerLiteral()
+|   RationalLiteral()
+|   BooleanLiteral()
+}
+
+void IntegerLiteral() : {} {
+    <POSITIVE_INTEGER_LITERAL>
+|   <NEGATIVE_INTEGER_LITERAL>
+}
+
+void RationalLiteral() : {} {
+    <RATIONAL_LITERAL>
+}
+
+void BooleanLiteral() : {} {
+    <TRUE>
+|   <FALSE>
+}
+
+void VariableDeclarator() : {} {
+    VariableDeclaratorIdentifier() [ <ASSIGN> Initializer() ]
+}
+
+void VariableDeclaratorIdentifier() : {} {
+    Identifier() ( <LBRACKET> [ ArrayDeclarationAllocator() ] <RBRACKET> )*
+}
+
+void ArrayDeclarationAllocator() : {} {
+    <POSITIVE_INTEGER_LITERAL>
+|   Identifier()
+}
+
+void Initializer() : {} {
+    LOOKAHEAD(<LBRACE> <RBRACE>) <LBRACE> <RBRACE>
+|   <LBRACE> InitializerList() [<COMMA>] <RBRACE>
+|   Literal()
+}
+
+void InitializerList() : {} {
+    Initializer()
+    (	LOOKAHEAD(<COMMA> (<LBRACE>|Literal()))
+	<COMMA> Initializer()
+    )*
+}
+
+void Literal() : {} {
+    NumericLiteral()
+|   CharacterLiteral()
+|   StringLiteral()
+}
+
+void CharacterLiteral() : {} {
+    <CHARACTER_LITERAL>
+}
+
+void StringLiteral() : {} {
+    <STRING_LITERAL>
+}
+
+void FunctionBody() : {} {
+    (Statement())* [Return()] <RBRACE>
+}
+
+void Statement() : {} {
+    
+}
+
+void Return() : {} {
+    <RETURN>
+}

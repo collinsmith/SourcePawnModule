@@ -1,0 +1,320 @@
+options {
+    ERROR_REPORTING = false;
+    STATIC = false;
+    TOKEN_FACTORY = "Token";
+    JDK_VERSION = "1.8";
+    BUILD_PARSER = false;
+}
+
+PARSER_BEGIN(PawnParser)
+
+package org.alliedmodders.pawn.jcclexer2;
+
+import java.io.*;
+
+public class PawnParser {}
+
+PARSER_END(PawnParser)
+
+/* WHITESPACE */
+
+TOKEN : {
+    <WHITESPACE
+    :   " "
+    |   "\t"
+    >
+|   <EOL
+    :   "\n"
+    |   "\r"
+    |   "\f"
+    >
+}
+
+/* COMMENTS */
+
+TOKEN : {
+    <SINGLE_LINE_COMMENT
+    :   "//" (~["\n", "\r"])* ("\n" | "\r" | "\r\n")?
+    >
+}
+
+MORE : {
+    "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_MULTI_LINE_COMMENT>
+MORE : {
+    < ~[] >
+}
+
+<IN_MULTI_LINE_COMMENT>
+TOKEN : {
+    <MULTI_LINE_COMMENT
+    :   ("*/")?
+    > : DEFAULT
+}
+
+/* LITERALS */
+
+TOKEN : {
+    <ZERO_INTEGER_LITERAL
+    :   ( <BINARY_PREFIX> | <HEXADECIMAL_PREFIX> )? <ZERO>
+    >
+    |   <#ZERO
+        :   ("0")+
+        >
+    |   <#BINARY_PREFIX
+        :   "0b"
+        >
+    |   <#HEXADECIMAL_PREFIX
+        :   "0" ("x" | "X")
+        >
+|   <POSITIVE_INTEGER_LITERAL
+    :   <POSITIVE_DECIMAL_LITERAL>
+    |   <POSITIVE_BINARY_LITERAL>
+    |   <POSITIVE_HEXADECIMAL_LITERAL>
+    >
+    |   <#POSITIVE_DECIMAL_LITERAL
+        :   ("0")* (<NONZERO_DECIMAL_DIGIT>)+ (<DECIMAL_DIGIT>)*
+        >
+        |   <#NONZERO_DECIMAL_DIGIT
+            :   ["1"-"9"]
+            >
+        |   <#DECIMAL_DIGIT
+            :   ["0"-"9"]
+            >
+    |   <#POSITIVE_BINARY_LITERAL
+        :   <BINARY_PREFIX> ("0")* (<NONZERO_BINARY_DIGIT>)+ (<BINARY_DIGIT>)*
+        >
+        |   <#NONZERO_BINARY_DIGIT
+            :   ("1")
+            >
+        |   <#BINARY_DIGIT
+            :   ("0" | "1")
+            >
+    |   <#POSITIVE_HEXADECIMAL_LITERAL
+        :   <HEXADECIMAL_PREFIX> ("0")* (<NONZERO_HEXADECIMAL_DIGIT>)+ (<HEXADECIMAL_DIGIT>)*
+        >
+        |   <#NONZERO_HEXADECIMAL_DIGIT
+            :   ["1"-"9", "a"-"f", "A"-"F"]
+            >
+        |   <#HEXADECIMAL_DIGIT
+            :   ["0"-"9", "a"-"f", "A"-"F"]
+            >
+|   <NEGATIVE_INTEGER_LITERAL
+    :   "-" <POSITIVE_INTEGER_LITERAL>
+    >
+|   <RATIONAL_LITERAL
+    :   <DECIMAL_LITERAL> "." <DECIMAL_LITERAL> (<EXPONENT_PART>)?
+    >
+    |   <#DECIMAL_LITERAL
+        :   (<DECIMAL_DIGIT>)+
+        >
+    |   <#EXPONENT_PART
+        :   "e" <DECIMAL_LITERAL>
+        >
+|   <CHARACTER_LITERAL
+    :   "'"
+        (    ~["'", "\\", "\n", "\r"]
+        |     <ESCAPED_SEQUENCE>
+        )
+        "'"
+    >
+}
+
+TOKEN : {
+    <STRING_LITERAL_PREFIX
+    :   "\""
+    > : STRING_ESCAPE_SEQUENCE_INFIX
+}
+
+<STRING_ESCAPE_SEQUENCE_INFIX>
+TOKEN : {
+    <ESCAPED_SEQUENCE
+    :   "\\" <ESCAPE_SEQUENCE>
+    >
+    |   <#ESCAPE_SEQUENCE
+        :   <DEFINED_ESCAPE>
+        |   <DECIMAL_LITERAL> (";")?
+        |   <HEXADECIMAL_LITERAL> (";")?
+        >
+        |   <#DEFINED_ESCAPE
+            :   ["a", "b", "e", "f", "n", "r", "t", "v", "\\", "'", "\"", "%"]
+            >
+        |   <#HEXADECIMAL_LITERAL
+            :   <HEXADECIMAL_PREFIX> (<HEXADECIMAL_DIGIT>)+
+            >
+|   <STRING_LITERAL_INFIX
+    :   (~["\n", "\r", "\""])*
+    >
+}
+
+<STRING_ESCAPE_SEQUENCE_INFIX>
+TOKEN : {
+    <STRING_LITERAL_POSTFIX
+    :   "\""
+    > : DEFAULT
+}
+
+/* KEYWORDS AND OTHER RESERVED WORDS */
+
+TOKEN : {
+    <UNDERSCORE: "_" >
+|   <ASSERT: "assert" >
+|   <BREAK: "break" >
+|   <CASE: "case" >
+|   <CONST: "const" >
+|   <CONTINUE: "continue" >
+|   <_DEFAULT: "default" >
+|   <DEFINED: "defined" >
+|   <DO: "do" >
+|   <ELSE: "else" >
+|   <ENUM: "enum" >
+|   <EXIT: "exit" >
+|   <FALSE: "false" >
+|   <FOR: "for" >
+|   <FORWARD: "forward" >
+|   <GOTO: "goto" >
+|   <IF: "if" >
+|   <NATIVE: "native" >
+|   <NEW: "new" >
+|   <OPERATOR: "operator" >
+|   <PUBLIC: "public" >
+|   <RETURN: "return" >
+|   <SIZEOF: "sizeof" >
+|   <SLEEP: "sleep" >
+|   <STATE: "state" >
+|   <STATIC: "static" >
+|   <STOCK: "stock" >
+|   <SWITCH: "switch" >
+|   <TAGOF: "tagof" >
+|   <TRUE: "true" >
+|   <WHILE: "while" >
+|   <PREPROCESSOR
+    :   "#" <PREPROCESSOR_DIRECTIVE>
+    >
+    |   <#PREPROCESSOR_DIRECTIVE
+        :   "assert"
+        |   "define"
+        |   "else"
+        |   "elseif"
+        |   "endif"
+        |   "endinput"
+        |   "error"
+        |   "file"
+        |   "if"
+        |   "include"
+        |   "line"
+        |   "pragma"
+        |   "section"
+        |   "tryinclude"
+        |   "undef"
+        >
+|   <PRAGMA_ALIGN: "align" >
+|   <PRAGMA_AMXLIMIT: "amxlimit" >
+|   <PRAGMA_AMXRAM: "amxram" >
+|   <PRAGMA_CODEPAGE: "codepage" >
+|   <PRAGMA_CTRLCHAR: "ctrlchar" >
+|   <PRAGMA_DEPRECATED: "deprecated" >
+|   <PRAGMA_DYNAMIC: "dynamic" >
+|   <PRAGMA_LIBRARY: "library" >
+|   <PRAGMA_LOADLIB: "loadlib" >
+|   <PRAGMA_OVERLAY: "overlay" >
+|   <PRAGMA_RATIONAL: "rational" >
+|   <PRAGMA_REQLIB: "reqlib" >
+|   <PRAGMA_SEMICOLON: "semicolon" >
+|   <PRAGMA_TABSIZE: "tabsize" >
+|   <MACRO_CHARSMAX: "charsmax" >
+|   <MACRO_PARAMETER: "%" ["0"-"9"] >
+}
+
+/* TAGS/LABELS */
+
+TOKEN : {
+    <TAG
+    :   (<IDENTIFIER> | <ANY_TAG> | <BOOL_TAG>) ":"
+    >
+    |   <#ANY_TAG
+        :   "_"
+        |   "any"
+        >
+    |   <#BOOL_TAG
+        :   "bool"
+        >
+}
+
+/* IDENTIFIERS */
+
+TOKEN : {
+    <IDENTIFIER
+    :   <SYMBOL> (<SYMBOL> | <LETTER> | <DIGIT>)+
+    |   <LETTER> (<SYMBOL> | <LETTER> | <DIGIT>)*
+    >
+    |   <#SYMBOL
+        :   ("_" | "@")
+        >
+    |   <#LETTER
+        :   ["a"-"z", "A"-"Z"]
+        >
+    |   <#DIGIT
+        :   ["0"-"9"]
+        >
+}
+
+/* SEPARATORS */
+
+TOKEN : {
+    <LPAREN: "(" >
+|   <RPAREN: ")" >
+|   <LBRACE: "{" >
+|   <RBRACE: "}" >
+|   <LBRACKET: "[" >
+|   <RBRACKET: "]" >
+|   <SEMICOLON: ";" >
+|   <COMMA: "," >
+|   <DOT: "." >
+}
+
+/* OPERATORS */
+
+TOKEN : {
+    <PLUS: "+" >
+|   <MINUS: "-" >
+|   <STAR: "*" >
+|   <SLASH: "/" >
+|   <REM: "%" >
+|   <INCR: "++" >
+|   <DECR: "--" >
+|   <RSHIFT: ">>" >
+|   <RUNSIGNEDSHIFT: ">>>" >
+|   <LSHIFT: "<<" >
+|   <BIT_AND: "&" >
+|   <BIT_OR: "|" >
+|   <XOR: "^" >
+|   <ASSIGN: "=" >
+|   <PLUSASSIGN: "+=" >
+|   <MINUSASSIGN: "-=" >
+|   <STARASSIGN: "*=" >
+|   <SLASHASSIGN: "/=" >
+|   <ANDASSIGN: "&=" >
+|   <ORASSIGN: "|=" >
+|   <XORASSIGN: "^=" >
+|   <REMASSIGN: "%=" >
+|   <LSHIFTASSIGN: "<<=" >
+|   <RSIGNEDSHIFTASSIGN: ">>=" >
+|   <RUNSIGNEDSHIFTASSIGN: ">>>=" >
+|   <EQ: "==" >
+|   <NE: "!=" >
+|   <LT: "<" >
+|   <LE: "<=" >
+|   <GT: ">" >
+|   <GE: ">=" >
+|   <BANG: "!" >
+|   <SC_OR: "||" >
+|   <SC_AND: "&&" >
+|   <TILDE: "~" >
+|   <HOOK: "?" >
+|   <COLON: ":" >
+|   <ELLIPSIS: "..." >
+|   <ESCAPE: "\\" >
+}
