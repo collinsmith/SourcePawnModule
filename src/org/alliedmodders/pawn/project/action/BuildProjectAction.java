@@ -78,6 +78,16 @@ public final class BuildProjectAction extends AbstractAction {
 	String projectPath = project.getProjectDirectory().getPath();
 	String buildPath = String.format("%s/build/%s.smx", projectPath, fileName);
         //String defaultInclude = FileUtil.normalizePath("src/org/alliedmodders/pawn/file/pawn/default.inc");
+                
+        if (project.getProjectDirectory().getFileObject("build") == null) {
+            try {
+                project.getProjectDirectory().createFolder("build");
+            } catch (IOException e) {
+                io.getErr().printf("Could not build %s: Failed to create build dir because: %s",
+                        fileName, e.getMessage());
+                return;
+            }
+        }
 	
 	io.getOut().println("------------------------------------------------");
 	io.getOut().printf("Building '%s' . . .%n", context.getPath());
@@ -112,9 +122,10 @@ public final class BuildProjectAction extends AbstractAction {
 	    if (pluginsDir.isEmpty()) {
 		io.getOut().println("Plugins directory not set. Skipping.");
 		return;
-	    }
+	    } else {
+                Files.copy(Paths.get(buildPath), Paths.get(pluginsDir, fileName + ".smx"), StandardCopyOption.REPLACE_EXISTING);
+            }
 	    
-	    Files.copy(Paths.get(buildPath), Paths.get(pluginsDir, fileName + ".smx"), StandardCopyOption.REPLACE_EXISTING);
 	    io.getOut().println("Done.");
 	} catch (IOException e) {
 	    io.getErr().println("Cannot find " + e.getMessage());

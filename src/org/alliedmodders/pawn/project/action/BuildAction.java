@@ -52,7 +52,7 @@ public final class BuildAction implements ActionListener {
 	String fileName = context.getName();
 	String filePath = context.getPrimaryFile().getPath();
 	String fileDir = context.getFolder().getPrimaryFile().getPath();
-	String buildPath = String.format("%s/../build/%s.smx", fileDir, fileName);
+	String buildPath = String.format("%s/%s.smx", fileDir, fileName);
         //String defaultInclude = FileUtil.normalizePath("src/org/alliedmodders/pawn/file/pawn/default.inc");
 	
 	io.getOut().println("------------------------------------------------");
@@ -88,9 +88,10 @@ public final class BuildAction implements ActionListener {
 	    if (pluginsDir.isEmpty()) {
 		io.getOut().println("Plugins directory not set. Skipping.");
 		return;
-	    }
+	    } else {
+                Files.copy(Paths.get(buildPath), Paths.get(pluginsDir, fileName + ".smx"), StandardCopyOption.REPLACE_EXISTING);
+            }
 
-	    Files.copy(Paths.get(buildPath), Paths.get(pluginsDir, fileName + ".smx"), StandardCopyOption.REPLACE_EXISTING);
 	    io.getOut().println("Done.");
 	} catch (IOException e) {
 	    io.getErr().println("Cannot find " + e.getMessage());

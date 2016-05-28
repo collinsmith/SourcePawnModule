@@ -21,6 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.alliedmodders.pawn.project.PawnProjectFactory;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
@@ -77,6 +78,8 @@ public class EmptyPawnProjectWizardIterator implements WizardDescriptor./*Progre
         FileObject template = Templates.getTemplate(wiz);
         FileObject dir = FileUtil.toFileObject(dirF);
         unZipFile(template.getInputStream(), dir);
+        
+        FileObject pawnProjectMarker = dir.createFolder(PawnProjectFactory.PROJECT_FOLDER);
 
         // Always open top dir as a project:
         resultSet.add(dir);

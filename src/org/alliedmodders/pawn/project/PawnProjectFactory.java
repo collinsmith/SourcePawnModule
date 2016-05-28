@@ -9,7 +9,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=ProjectFactory.class)
 public class PawnProjectFactory implements ProjectFactory {
-    public static final String PROJECT_FOLDER = ".pawn";
+    public static final String PROJECT_FOLDER = ".sourcepawn";
     
     @Override
     public boolean isProject(FileObject dir) {
