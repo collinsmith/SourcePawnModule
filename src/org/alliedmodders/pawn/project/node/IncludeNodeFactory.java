@@ -1,6 +1,8 @@
 package org.alliedmodders.pawn.project.node;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,49 +47,29 @@ public class IncludeNodeFactory implements NodeFactory {
 
 	@Override
 	public List<Node> keys() {
-	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src").getFileObject("include");
-	    List<Node> fileResult = new ArrayList<>();
-	    List<Node> folderResult = new ArrayList<>();
-	    if (textsFolder != null) {
-		for (FileObject textsFolderFile : textsFolder.getChildren()) {
-		    try {
-                        if (textsFolderFile.isFolder()) {
-			    folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			} else {
-			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			}
-		    } catch (DataObjectNotFoundException ex) {
-			Exceptions.printStackTrace(ex);
-		    }
-		}
-	    }
-	    
-	    fileResult.sort(new Comparator<Node>() {
-		@Override
-		public int compare(Node o1, Node o2) {
-		    return o1.getName().compareTo(o2.getName());
-		}
-	    });
-	    
-	    folderResult.sort(new Comparator<Node>() {
-		@Override
-		public int compare(Node o1, Node o2) {
-		    return o1.getName().compareTo(o2.getName());
-		}
-	    });
-	    
-	    folderResult.addAll(fileResult);
-
             try {
-                Children children = new Index.ArrayChildren();
-                children.add(folderResult.toArray(new Node[0]));
-                Node sourceNode = new FilterNode(
-                        DataObject.find(textsFolder).getNodeDelegate(),
-                        children) {
+                FileObject textsFolder = project.getProjectDirectory()
+                        .getFileObject("src")
+                        .getFileObject("include");
+                Node delegate = DataObject.find(textsFolder).getNodeDelegate();
+                Node sourceNode = new FileFilteredNode(
+                        delegate,
+                        new FileFilter() {
+                            @Override
+                            public boolean accept(File pathname) {
+                                if (pathname.isDirectory()) {
+                                    return true;
+                                }
+                                
+                                return pathname.getName().endsWith(".inc")
+                                    || pathname.getName().endsWith(".inl");
+                            }
+                        }) {
 
                     @Override
                     public Image getIcon(int type) {
-                        return ImageUtilities.loadImage(PawnProject.PawnProjectLogicalView.FOLDER_ICON);
+                        return ImageUtilities.loadImage(
+                                PawnProject.PawnProjectLogicalView.FOLDER_ICON);
                     }
 
                     @Override

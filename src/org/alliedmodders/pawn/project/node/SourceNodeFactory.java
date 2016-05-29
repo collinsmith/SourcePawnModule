@@ -1,9 +1,10 @@
 package org.alliedmodders.pawn.project.node;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
@@ -15,9 +16,7 @@ import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
-import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -45,51 +44,17 @@ public class SourceNodeFactory implements NodeFactory {
 
 	@Override
 	public List<Node> keys() {
-	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src");
-	    List<Node> fileResult = new ArrayList<>();
-	    List<Node> folderResult = new ArrayList<>();
-	    if (textsFolder != null) {
-		for (FileObject textsFolderFile : textsFolder.getChildren()) {
-		    try {
-                        if (textsFolderFile.isFolder()) {
-                            if (textsFolderFile.getName().equals("include")) {
-                                continue;
-                            } else if (textsFolderFile.getName().equals("testsuite")) {
-                                continue;
-                            }
-                            
-			    //folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			} else if (textsFolderFile.getExt().equalsIgnoreCase("sp")) {
-			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			}
-		    } catch (DataObjectNotFoundException ex) {
-			Exceptions.printStackTrace(ex);
-		    }
-		}
-	    }
-	    
-	    fileResult.sort(new Comparator<Node>() {
-		@Override
-		public int compare(Node o1, Node o2) {
-		    return o1.getName().compareTo(o2.getName());
-		}
-	    });
-	    
-	    folderResult.sort(new Comparator<Node>() {
-		@Override
-		public int compare(Node o1, Node o2) {
-		    return o1.getName().compareTo(o2.getName());
-		}
-	    });
-            
-	    folderResult.addAll(fileResult);
-            
             try {
-                Children children = new Index.ArrayChildren();
-                children.add(folderResult.toArray(new Node[0]));
-                Node sourceNode = new FilterNode(
-                        DataObject.find(textsFolder).getNodeDelegate(),
-                        children) {
+                FileObject textsFolder = project.getProjectDirectory().getFileObject("src");
+                Node delegate = DataObject.find(textsFolder).getNodeDelegate();
+                Node sourceNode = new FileFilteredNode(
+                        delegate,
+                        new FileFilter() {
+                            @Override
+                            public boolean accept(File pathname) {
+                                return pathname.getName().endsWith(".sp");
+                            }
+                        }) {
 
                     @Override
                     public Image getIcon(int type) {
@@ -149,4 +114,5 @@ public class SourceNodeFactory implements NodeFactory {
 	    //...
 	}
     }
+    
 }
