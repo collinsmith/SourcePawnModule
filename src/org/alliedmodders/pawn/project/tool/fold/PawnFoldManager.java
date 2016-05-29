@@ -1,5 +1,7 @@
 package org.alliedmodders.pawn.project.tool.fold;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -21,6 +23,7 @@ public class PawnFoldManager implements FoldManager {
     
     public static final FoldType COMMENT_FOLD_TYPE = FoldType.COMMENT;
     public static final FoldType DOC_COMMENT_FOLD_TYPE = FoldType.DOCUMENTATION;
+    public static final FoldType CODE_BLOCK = FoldType.CODE_BLOCK;
     
     private FoldOperation operation;
     private FileObject file;
@@ -37,6 +40,8 @@ public class PawnFoldManager implements FoldManager {
         Document doc = hierarchy.getComponent().getDocument();
         TokenHierarchy<Document> tokenHierarchy = TokenHierarchy.get(doc);
         TokenSequence<PawnTokenId> tokenSequence = tokenHierarchy.tokenSequence(PawnTokenId.language());
+        
+        Deque<Integer> bracesMatcher = new ArrayDeque<>();
         
         int start = 0;
         int offset = 0;
@@ -70,6 +75,22 @@ public class PawnFoldManager implements FoldManager {
                                 null,
                                 FoldTemplate.DEFAULT,
                                 "/* ... */",
+                                null,
+                                transaction);
+                        break;
+                    case LBRACE:
+                        bracesMatcher.addLast(offset);
+                        break;
+                    case RBRACE:
+                        type = CODE_BLOCK;
+                        start = bracesMatcher.removeLast();
+                        operation.addToHierarchy(
+                                type,
+                                start,
+                                offset + token.length(),
+                                null,
+                                FoldTemplate.DEFAULT,
+                                "{ ... }",
                                 null,
                                 transaction);
                         break;
