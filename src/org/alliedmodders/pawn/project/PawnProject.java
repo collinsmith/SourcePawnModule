@@ -143,7 +143,6 @@ public class PawnProject implements Project {
 			NodeFactorySupport.createCompositeChildren(
 			    project,
 			    "Projects/org-alliedmodders-pawn-project/Nodes"),
-			//new FilterNode.Children(node),
 			new ProxyLookup(new Lookup[] {
 			    Lookups.singleton(project),
 			    node.getLookup()
