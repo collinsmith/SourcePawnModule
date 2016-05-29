@@ -14,7 +14,6 @@ import org.openide.loaders.DataObject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -26,7 +25,7 @@ import org.openide.windows.InputOutput;
 @ActionRegistration(
 	displayName = "#CTL_BuildAction"
 )
-@ActionReference(path = "Loaders/text/x-pawn/Actions", position = 250, separatorAfter = 300)
+@ActionReference(path = "Loaders/text/x-pawn/Actions", position = 250, separatorAfter = 251)
 @Messages("CTL_BuildAction=Build")
 public final class BuildAction implements ActionListener {
     private final DataObject context;
