@@ -9,8 +9,7 @@ public class PawnFoldManagerFactory implements FoldManagerFactory {
 
     @Override
     public FoldManager createFoldManager() {
-        //return new PawnFoldManager();
-        return null;
+        return new PawnFoldManager();
     }
 
 }
