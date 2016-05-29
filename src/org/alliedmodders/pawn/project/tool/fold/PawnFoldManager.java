@@ -82,6 +82,10 @@ public class PawnFoldManager implements FoldManager {
                         bracesMatcher.addLast(offset);
                         break;
                     case RBRACE:
+                        if (bracesMatcher.isEmpty()) {
+                            break;
+                        }
+                        
                         type = CODE_BLOCK;
                         start = bracesMatcher.removeLast();
                         operation.addToHierarchy(
