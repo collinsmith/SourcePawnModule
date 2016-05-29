@@ -15,16 +15,12 @@ import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
-import org.openide.nodes.NodeAdapter;
-import org.openide.nodes.NodeMemberEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.datatransfer.NewType;
 
 @NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 0)
 public class IncludeNodeFactory implements NodeFactory {
