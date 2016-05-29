@@ -55,9 +55,11 @@ public class SourceNodeFactory implements NodeFactory {
                         if (textsFolderFile.isFolder()) {
                             if (textsFolderFile.getName().equals("include")) {
                                 continue;
+                            } else if (textsFolderFile.getName().equals("testsuite")) {
+                                continue;
                             }
                             
-			    folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
+			    //folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
 			} else if (textsFolderFile.getExt().equalsIgnoreCase("sp")) {
 			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
 			}
@@ -87,7 +89,7 @@ public class SourceNodeFactory implements NodeFactory {
                 Children children = new Index.ArrayChildren();
                 children.add(folderResult.toArray(new Node[0]));
                 Node sourceNode = new FilterNode(
-                        DataObject.find(textsFolder).getNodeDelegate(),
+                        DataObject.find(textsFolder).getNodeDelegate().cloneNode(),
                         children) {
 
                     @Override
@@ -130,6 +132,7 @@ public class SourceNodeFactory implements NodeFactory {
 
 	@Override
 	public void addNotify() {
+            System.out.println("addNotify called");
 	    //...
 	}
 

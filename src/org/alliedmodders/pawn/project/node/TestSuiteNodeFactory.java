@@ -15,20 +15,16 @@ import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
-import org.openide.nodes.NodeAdapter;
-import org.openide.nodes.NodeMemberEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.datatransfer.NewType;
 
 @NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 10)
-public class IncludeNodeFactory implements NodeFactory {
-    private IncludeNodeFactory() {
+public class TestSuiteNodeFactory implements NodeFactory {
+    private TestSuiteNodeFactory() {
         //...
     }
 
@@ -49,7 +45,7 @@ public class IncludeNodeFactory implements NodeFactory {
 
 	@Override
 	public List<Node> keys() {
-	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src").getFileObject("include");
+	    FileObject textsFolder = project.getProjectDirectory().getFileObject("src").getFileObject("testsuite");
 	    List<Node> fileResult = new ArrayList<>();
 	    List<Node> folderResult = new ArrayList<>();
 	    if (textsFolder != null) {
@@ -57,7 +53,7 @@ public class IncludeNodeFactory implements NodeFactory {
 		    try {
                         if (textsFolderFile.isFolder()) {
 			    folderResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
-			} else {
+			} else if (textsFolderFile.getExt().equalsIgnoreCase("sp")) {
 			    fileResult.add(DataObject.find(textsFolderFile).getNodeDelegate());
 			}
 		    } catch (DataObjectNotFoundException ex) {
@@ -101,7 +97,7 @@ public class IncludeNodeFactory implements NodeFactory {
 
                     @Override
                     public String getDisplayName() {
-                        return "Include";
+                        return "Tests";
                     }
 
                     @Override
