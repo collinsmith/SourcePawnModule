@@ -22,7 +22,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
-@NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 10)
+@NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 20)
 public class TestSuiteNodeFactory implements NodeFactory {
     private TestSuiteNodeFactory() {
         //...

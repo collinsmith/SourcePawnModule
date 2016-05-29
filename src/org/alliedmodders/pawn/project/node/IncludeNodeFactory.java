@@ -26,7 +26,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.datatransfer.NewType;
 
-@NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 10)
+@NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 0)
 public class IncludeNodeFactory implements NodeFactory {
     private IncludeNodeFactory() {
         //...

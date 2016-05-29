@@ -20,6 +20,8 @@ import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
+import org.openide.nodes.NodeListener;
+import org.openide.nodes.NodeMemberEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
@@ -89,7 +91,7 @@ public class SourceNodeFactory implements NodeFactory {
                 Children children = new Index.ArrayChildren();
                 children.add(folderResult.toArray(new Node[0]));
                 Node sourceNode = new FilterNode(
-                        DataObject.find(textsFolder).getNodeDelegate().cloneNode(),
+                        DataObject.find(textsFolder).getNodeDelegate(),
                         children) {
 
                     @Override
@@ -132,7 +134,6 @@ public class SourceNodeFactory implements NodeFactory {
 
 	@Override
 	public void addNotify() {
-            System.out.println("addNotify called");
 	    //...
 	}
 
