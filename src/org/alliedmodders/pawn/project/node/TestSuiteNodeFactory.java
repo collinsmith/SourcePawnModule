@@ -11,6 +11,7 @@ import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 import org.alliedmodders.pawn.project.PawnProject;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
@@ -23,6 +24,7 @@ import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.lookup.Lookups;
 
 @NodeFactory.Registration(projectType = "org-alliedmodders-pawn-project", position = 20)
 public class TestSuiteNodeFactory implements NodeFactory {
@@ -54,6 +56,14 @@ public class TestSuiteNodeFactory implements NodeFactory {
                 Node delegate = DataObject.find(textsFolder).getNodeDelegate();
                 Node sourceNode = new FileFilteredNode(
                         delegate,
+                        Lookups.fixed(new PrivilegedTemplates() {
+                            @Override
+                            public String[] getPrivilegedTemplates() {
+                                return new String[] {
+                                    "Templates/SourcePawn/emptyTestSuite.sp",
+                                };
+                            }
+                        }),
                         new FileFilter() {
                             @Override
                             public boolean accept(File pathname) {
