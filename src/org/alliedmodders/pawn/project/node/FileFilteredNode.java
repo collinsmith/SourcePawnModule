@@ -14,29 +14,46 @@ import org.openide.util.lookup.ProxyLookup;
 
 public class FileFilteredNode extends FilterNode {
 
+    private final Lookup delegate;
+    
     public FileFilteredNode(Node original, FileFilter fileFilter) {
         super(original, new FileFilteredChildren(original, fileFilter));
+        this.delegate = null;
     }
     
     public FileFilteredNode(Node original, Lookup delegate,
             FileFilter fileFilter) {
         super(original,
-                new FileFilteredChildren(original, fileFilter),
+                new FileFilteredChildren(original, delegate, fileFilter),
                 new ProxyLookup(delegate, original.getLookup()));
+        this.delegate = delegate;
     }
     
     static class FileFilteredChildren extends FilterNode.Children {
 
+        private final Lookup delegate;
         private final FileFilter fileFilter;
 
         public FileFilteredChildren(Node original, FileFilter fileFilter) {
             super(original);
+            this.delegate = null;
+            this.fileFilter = fileFilter;
+        }
+
+        public FileFilteredChildren(Node original, Lookup delegate,
+                FileFilter fileFilter) {
+            super(original);
+            this.delegate = delegate;
             this.fileFilter = fileFilter;
         }
 
         @Override
         protected Node copyNode(Node original) {
-            return new FileFilteredNode(original, fileFilter);
+            if (delegate == null) {
+                return new FileFilteredNode(original, fileFilter);
+            } else {
+                return new FileFilteredNode(original, delegate, fileFilter);
+            }
         }
 
         @Override
