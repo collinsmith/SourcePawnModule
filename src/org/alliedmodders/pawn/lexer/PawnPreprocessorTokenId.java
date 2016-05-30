@@ -144,6 +144,7 @@ public enum PawnPreprocessorTokenId implements TokenId {
     COMMA(",", "separator"),
     DOT(".", "separator"),
     
+    EOL(null, "whitespace"),
     WHITESPACE(null, "whitespace"),
     
     LINE_CONCATENATION(null, "line-concatenation"),

@@ -760,10 +760,11 @@ public class PawnPreprocessorLexer extends AbstractPawnLexer<PawnPreprocessorTok
                 }
                 
                 return token(PawnPreprocessorTokenId.LEXICAL_ERROR);*/
-            case '\t':
+            case '\r': consumeNewline();
             case '\n':
+                return token(PawnPreprocessorTokenId.EOL);
+            case '\t':
             case '\f':
-            case '\r':
                 return finishWhitespace();
             case ' ':
                 ch = nextChar();
