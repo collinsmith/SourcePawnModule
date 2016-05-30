@@ -23,6 +23,12 @@
 	description = "./includeFile/includeFile.html",
 	content = "./includeFile/includeFile.inc",
 	scriptEngine = "freemarker"),
+    @TemplateRegistration(
+	folder = "SourcePawn",
+	displayName = "#emptyTestSuite_displayName",
+	description = "./emptyTestSuite/emptyTestSuite.html",
+	content = "./emptyTestSuite/emptyTestSuite.sp",
+	scriptEngine = "freemarker"),
 })
 package org.alliedmodders.pawn.project.sample.file.pawn;
 
