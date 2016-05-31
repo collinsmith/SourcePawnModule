@@ -44,6 +44,7 @@ public enum PawnTokenId implements TokenId {
     NEW("new", "keyword"),
     NULL("null", "keyword"),
     OPERATOR("operator", "keyword"),
+    PROPERTY("property", "keyword"),
     PUBLIC("public", "keyword"),
     RETURN("return", "keyword-directive"),
     SIZEOF("sizeof", "keyword-directive"),
