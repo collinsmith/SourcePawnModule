@@ -59,6 +59,7 @@ public enum PawnTokenId implements TokenId {
     VIEW_AS("view_as", "keyword-directive"),
     WHILE("while", "keyword-directive"),
 
+    ANY("any", "tag-builtin"),
     BOOL("bool", "tag-builtin"),
     CHAR("char", "tag-builtin"),
     FLOAT("float", "tag-builtin"),
