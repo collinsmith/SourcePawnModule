@@ -200,6 +200,24 @@ public class PawnPreprocessorLexer extends AbstractPawnLexer<PawnPreprocessorTok
             case '}':
                 return token(PawnPreprocessorTokenId.RBRACE);
             case '"': // string literal
+                if (state == PawnPreprocessorTokenId.INCLUDE) {
+                    while (true) {
+                        switch (nextChar()) {
+                            case '"':
+                                return token(PawnPreprocessorTokenId.INCLUDE_RELATIVE_FILE);
+                            case '\\':
+                                nextChar();
+                                break;
+                            case '\r': consumeNewline();
+                            case '\n':
+                            case EOF:
+                                // TODO: return EOL token
+                                return tokenFactory.createToken(PawnPreprocessorTokenId.INCLUDE_RELATIVE_FILE,
+                                        readLength(), PartType.START);
+                        }
+                    }
+                }
+                
                 while (true) {
                     switch (nextChar()) {
                         case '"':

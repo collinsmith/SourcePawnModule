@@ -16,6 +16,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import org.alliedmodders.pawn.lexer.PawnPreprocessorTokenId;
 import org.alliedmodders.pawn.lexer.PawnTokenId;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
@@ -230,6 +231,38 @@ public class PawnFoldManager implements FoldManager {
                                 "{ ... }",
                                 FoldTemplate.DEFAULT));
                         break;
+                    case PREPROCESSOR_DIRECTIVE:
+                        start = getPreprocessorIncludeOffset(tokenSequence);
+                        if (start == -1) {
+                            break;
+                        }
+
+                        end = getPreprocessorIncludeEnd(tokenSequence);
+                        //end = tokenSequence.offset() + token.length();
+                        while (tokenSequence.moveNext()) {
+                            token = tokenSequence.token();
+                            if (token.id() == PawnTokenId.WHITESPACE) {
+                                continue;
+                            }
+                            
+                            int tmp = getPreprocessorIncludeEnd(tokenSequence);
+                            if (tmp == -1) {
+                                tokenSequence.movePrevious();
+                                break;
+                            }
+                            
+                            end = tmp;
+                        }
+                        
+                        System.out.println("start = " + start + "; end = " + end);
+                        found.add(new FoldInfo(
+                                doc,
+                                start,
+                                end,
+                                CODE_BLOCK_FOLD_TYPE,
+                                "...",
+                                FoldTemplate.DEFAULT_BLOCK));
+                        break;
                 }
             } catch (BadLocationException e) {
                 Exceptions.printStackTrace(e);
@@ -237,6 +270,52 @@ public class PawnFoldManager implements FoldManager {
         }
 
         return found;
+    }
+    
+    private boolean isPreprocessorInclude(TokenSequence<PawnTokenId> tokenSequence) {
+        return getPreprocessorIncludeOffset(tokenSequence) != -1;
+    }
+    
+    private int getPreprocessorIncludeOffset(TokenSequence<PawnTokenId> tokenSequence) {
+        TokenSequence<PawnPreprocessorTokenId> preprocessorTokenSequence
+                = tokenSequence.embedded(PawnPreprocessorTokenId.language());
+        if (preprocessorTokenSequence == null
+         || !preprocessorTokenSequence.moveNext()) {
+            return -1;
+        }
+
+        Token<PawnPreprocessorTokenId> preprocessorToken
+                = preprocessorTokenSequence.token();
+        if (preprocessorToken.id() == PawnPreprocessorTokenId.INCLUDE
+         || preprocessorToken.id() == PawnPreprocessorTokenId.TRYINCLUDE) {
+            return preprocessorTokenSequence.offset()
+                    + preprocessorToken.length() + 1;
+        }
+        
+        return -1;
+    }
+    
+    private int getPreprocessorIncludeEnd(TokenSequence<PawnTokenId> tokenSequence) {
+        TokenSequence<PawnPreprocessorTokenId> preprocessorTokenSequence
+                = tokenSequence.embedded(PawnPreprocessorTokenId.language());
+        if (preprocessorTokenSequence == null
+         || !preprocessorTokenSequence.moveNext()) {
+            return -1;
+        }
+
+        Token<PawnPreprocessorTokenId> preprocessorToken
+                = preprocessorTokenSequence.token();
+        if (preprocessorToken.id() != PawnPreprocessorTokenId.INCLUDE
+         && preprocessorToken.id() != PawnPreprocessorTokenId.TRYINCLUDE) {
+            return -1;
+        }
+        
+        while (preprocessorTokenSequence.moveNext()) {
+            preprocessorToken = preprocessorTokenSequence.token();
+        }
+        
+        return preprocessorTokenSequence.offset()
+                - preprocessorToken.length() + 1;
     }
     
     private void mergeFolds(List<FoldInfo> generated,

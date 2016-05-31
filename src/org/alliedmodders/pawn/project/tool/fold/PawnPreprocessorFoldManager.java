@@ -171,7 +171,6 @@ public class PawnPreprocessorFoldManager implements FoldManager {
                 = tokenHierarchy.tokenSequence(PawnTokenId.language());
         Deque<Integer> blockMatcher = new ArrayDeque<>();
         int start = 0;
-
         int end = 0;
         int offset = 0;
         Fold fold = null;
@@ -234,6 +233,17 @@ public class PawnPreprocessorFoldManager implements FoldManager {
         }
 
         return found;
+    }
+    
+    private void finishIncludesFold(List<FoldInfo> found, int start, int end) 
+            throws BadLocationException {
+        found.add(new FoldInfo(
+                doc,
+                start,
+                end,
+                CODE_BLOCK_FOLD_TYPE,
+                "...",
+                FoldTemplate.DEFAULT_BLOCK));
     }
     
     private void mergeFolds(List<FoldInfo> generated,
