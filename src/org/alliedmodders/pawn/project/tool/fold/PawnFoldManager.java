@@ -254,7 +254,6 @@ public class PawnFoldManager implements FoldManager {
                             end = tmp;
                         }
                         
-                        System.out.println("start = " + start + "; end = " + end);
                         found.add(new FoldInfo(
                                 doc,
                                 start,
