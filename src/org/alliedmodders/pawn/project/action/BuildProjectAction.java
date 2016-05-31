@@ -10,6 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import org.alliedmodders.pawn.project.PawnProject;
+import org.alliedmodders.pawn.project.PawnProjectFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.openide.awt.ActionID;
@@ -17,8 +18,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -49,15 +48,17 @@ public final class BuildProjectAction extends AbstractAction {
 	InputOutput io = IOProvider.getDefault().getIO(ProjectUtils.getInformation(project).getDisplayName(), false);
 	io.getOut().printf("Building '%s' . . .%n", ProjectUtils.getInformation(project).getDisplayName());
 	
-	FileObject src = project.getProjectDirectory().getFileObject("src");
+	FileObject src = project.getProjectDirectory().getFileObject(PawnProjectFactory.SOURCES_FOLDER);
         if (src == null) {
-            io.getOut().printf("Source folder not found: %s/src%n", project.getProjectDirectory().getPath());
+            io.getOut().printf("Source folder not found: %s/%s%n",
+                    project.getProjectDirectory().getPath(),
+                    PawnProjectFactory.SOURCES_FOLDER);
             io.getOut().printf("Terminating build!%n", project.getProjectDirectory().getPath());
             return;
         }
         
 	for (FileObject fo : src.getChildren()) {
-	    if (fo.isFolder() || !"sp".equals(fo.getExt())) {
+	    if (fo.isFolder() || !fo.getExt().equals("sp")) {
 		continue;
 	    }
 	    
@@ -101,7 +102,7 @@ public final class BuildProjectAction extends AbstractAction {
 		//"-h",
                 //String.format("-p\"%s\"", defaultInclude),
 		String.format("-o=\"%s\"", buildPath),
-		String.format("-i=\"%s/src\"", projectPath),
+		String.format("-i=\"%s/" + PawnProjectFactory.SOURCES_FOLDER + "\"", projectPath),
 	    };
 	    
 	    Process p = Runtime.getRuntime().exec(cmd);

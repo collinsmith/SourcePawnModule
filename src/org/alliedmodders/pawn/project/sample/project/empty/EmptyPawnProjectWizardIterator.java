@@ -79,7 +79,23 @@ public class EmptyPawnProjectWizardIterator implements WizardDescriptor./*Progre
         FileObject dir = FileUtil.toFileObject(dirF);
         unZipFile(template.getInputStream(), dir);
         
-        FileObject pawnProjectMarker = dir.createFolder(PawnProjectFactory.PROJECT_FOLDER);
+        if (dir.getFileObject(PawnProjectFactory.PROJECT_FOLDER) == null) {
+            dir.createFolder(PawnProjectFactory.PROJECT_FOLDER);
+        }
+        
+        FileObject sourcesFolder
+                = dir.getFileObject(PawnProjectFactory.SOURCES_FOLDER);
+        if (sourcesFolder == null) {
+            sourcesFolder = dir.createFolder(PawnProjectFactory.SOURCES_FOLDER);
+        }
+        
+        if (sourcesFolder.getFileObject(PawnProjectFactory.INCLUDES_FOLDER) == null) {
+            sourcesFolder.createFolder(PawnProjectFactory.INCLUDES_FOLDER);
+        }
+                
+        if (sourcesFolder.getFileObject(PawnProjectFactory.TESTSUITES_FOLDER) == null) {
+            sourcesFolder.createFolder(PawnProjectFactory.TESTSUITES_FOLDER);
+        }
 
         // Always open top dir as a project:
         resultSet.add(dir);

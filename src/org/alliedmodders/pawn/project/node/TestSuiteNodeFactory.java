@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 import org.alliedmodders.pawn.project.PawnProject;
+import org.alliedmodders.pawn.project.PawnProjectFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -50,10 +51,19 @@ public class TestSuiteNodeFactory implements NodeFactory {
 	@Override
 	public List<Node> keys() {
             try {
-                FileObject textsFolder = project.getProjectDirectory()
-                        .getFileObject("src")
-                        .getFileObject("testsuite");
-                Node delegate = DataObject.find(textsFolder).getNodeDelegate();
+                FileObject sourcesFolder = project.getProjectDirectory()
+                        .getFileObject(PawnProjectFactory.SOURCES_FOLDER);
+                if (sourcesFolder == null) {
+                    return Collections.EMPTY_LIST;
+                }
+                
+                FileObject testSuitesFolder = sourcesFolder
+                        .getFileObject(PawnProjectFactory.TESTSUITES_FOLDER);
+                if (testSuitesFolder == null) {
+                    return Collections.EMPTY_LIST;
+                }
+                
+                Node delegate = DataObject.find(testSuitesFolder).getNodeDelegate();
                 Node sourceNode = new FileFilteredNode(
                         delegate,
                         Lookups.fixed(new PrivilegedTemplates() {

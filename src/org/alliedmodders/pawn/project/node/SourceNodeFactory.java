@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeListener;
 import org.alliedmodders.pawn.project.PawnProject;
+import org.alliedmodders.pawn.project.PawnProjectFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactory;
@@ -45,8 +46,13 @@ public class SourceNodeFactory implements NodeFactory {
 	@Override
 	public List<Node> keys() {
             try {
-                FileObject textsFolder = project.getProjectDirectory().getFileObject("src");
-                Node delegate = DataObject.find(textsFolder).getNodeDelegate();
+                FileObject sourcesFolder = project.getProjectDirectory()
+                        .getFileObject(PawnProjectFactory.SOURCES_FOLDER);
+                if (sourcesFolder == null) {
+                    return Collections.EMPTY_LIST;
+                }
+                
+                Node delegate = DataObject.find(sourcesFolder).getNodeDelegate();                
                 Node sourceNode = new FileFilteredNode(
                         delegate,
                         new FileFilter() {
