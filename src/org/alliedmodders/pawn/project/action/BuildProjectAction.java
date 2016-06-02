@@ -57,13 +57,26 @@ public final class BuildProjectAction extends AbstractAction {
             return;
         }
         
-	for (FileObject fo : src.getChildren()) {
-	    if (fo.isFolder() || !fo.getExt().equals("sp")) {
-		continue;
-	    }
-	    
-	    buildFile(fo);
-	}
+        buildFilesInFolder(src);
+    }
+    
+    private void buildFilesInFolder(FileObject context) {
+        if (!context.isFolder()) {
+            throw new IllegalArgumentException("context must be a folder");
+        }
+        
+        for (FileObject fo : context.getChildren()) {
+            if (fo.isFolder()) {
+                buildFilesInFolder(fo);
+                continue;
+            }
+            
+            if (!fo.hasExt("sp")) {
+                continue;
+            }
+            
+            buildFile(fo);
+        }
     }
     
     private void buildFile(FileObject context) {

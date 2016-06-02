@@ -15,6 +15,7 @@ public class PawnProjectFactory implements ProjectFactory {
     public static final String SOURCES_FOLDER = "src";
     public static final String INCLUDES_FOLDER = "include";
     public static final String TESTSUITES_FOLDER = "testsuite";
+    public static final String LIBS_FOLDER = "lib";
     
     @Override
     public boolean isProject(FileObject dir) {
