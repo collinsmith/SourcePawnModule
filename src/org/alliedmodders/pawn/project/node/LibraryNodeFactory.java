@@ -46,13 +46,13 @@ public class LibraryNodeFactory implements NodeFactory {
 	@Override
 	public List<Node> keys() {
             try {
-                FileObject sourcesFolder = project.getProjectDirectory()
+                FileObject libsFolder = project.getProjectDirectory()
                         .getFileObject(PawnProjectFactory.LIBS_FOLDER);
-                if (sourcesFolder == null) {
+                if (libsFolder == null) {
                     return Collections.EMPTY_LIST;
                 }
                 
-                Node delegate = DataObject.find(sourcesFolder).getNodeDelegate();                
+                Node delegate = DataObject.find(libsFolder).getNodeDelegate();                
                 Node sourceNode = new FileFilteredNode(
                         delegate,
                         new FileFilter() {
